@@ -1,0 +1,6 @@
+.signin-container {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    background-color: black; 
+}

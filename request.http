@@ -1,0 +1,109 @@
+###user registration
+POST http://localhost:7000/user-api/user
+Content-Type: application/json
+
+{
+  "username": "test11",
+  "email": "test@example.com",
+  "password": "123456",
+  "userType": "user"
+}
+
+###userlogin
+POST http://localhost:7000/user-api/login
+Content-Type: application/json
+
+{
+    "userType":"user",
+    "username":"pk",
+    "password":"287jj"
+}
+
+###author registration
+POST http://localhost:7000/author-api/user
+Content-Type: application/json
+
+{
+    "registerAs":"author",
+    "username":"mb",
+    "password":"888jj",
+    "email":"mahesh@gmail.com"
+}
+
+###authorlogin
+post http://localhost:7000/author-api/login
+Content-Type: application/json
+
+{
+    "registerAs":"author",
+    "username":"mb",
+    "password":"888jj"
+}
+
+###add a new article
+POST http://localhost:7000/author-api/new-article
+Content-Type: application/json
+
+{
+    "articleId":"{{$timestamp}}",
+    "title":"Basic Data Structures",
+    "category":"Programming",
+    "content":"I developed a comprehensive dashboard to analyze road accident trends and key safety factors. By cleaning and structuring accident data through effective data preprocessing techniques, I enhanced data accuracy and reliability. I created visual reports with interactive features and dynamic filters, which provided better insights into accident patterns and risk areas. This implementation reduced manual analysis time by 30%, streamlining the monitoring and reporting process of road safety metrics and enabling stakeholders to make informed decisions.",
+    "DateofCreation":"{{$datetime iso8601}}",
+    "DateofModification":"{{$datetime iso8601}}",
+    "username":"mb",
+    "comments":[],
+    "status":true
+}
+
+###view article by author
+GET http://localhost:7000/author-api/articles/mb
+
+
+###edit article by author
+PUT http://localhost:7000/author-api/article
+Content-Type: application/json
+
+{
+    "articleId":"1742222552",
+    "title":"Basic Data Structures",
+    "category":"Programming",
+    "content":"we developed a comprehensive dashboard to analyze road accident trends and key safety factors. By cleaning and structuring accident data through effective data preprocessing techniques, I enhanced data accuracy and reliability. I created visual reports with interactive features and dynamic filters, which provided better insights into accident patterns and risk areas. This implementation reduced manual analysis time by 30%, streamlining the monitoring and reporting process of road safety metrics and enabling stakeholders to make informed decisions.",
+    "DateofCreation":"2025-03-17T14:42:32.972Z",
+    "DateofModification":"{{$datetime iso8601}}",
+    "username":"mb",
+    "comments":[],
+    "status":true
+}
+
+###soft delete(update)
+PUT http://localhost:7000/author-api/article/1742222552
+Content-Type: application/json
+
+{
+    "articleId":"1742222552",
+    "title":"Basic Data Structures",
+    "category":"Programming",
+    "content":"we developed a comprehensive dashboard to analyze road accident trends and key safety factors. By cleaning and structuring accident data through effective data preprocessing techniques, I enhanced data accuracy and reliability. I created visual reports with interactive features and dynamic filters, which provided better insights into accident patterns and risk areas. This implementation reduced manual analysis time by 30%, streamlining the monitoring and reporting process of road safety metrics and enabling stakeholders to make informed decisions.",
+    "DateofCreation":"2025-03-17T14:42:32.972Z",
+    "DateofModification":"{{$datetime iso8601}}",
+    "username":"mb",
+    "comments":[],
+    "status":false
+}
+
+###read articles by user
+GET http://localhost:7000/user-api/articles
+
+###add comment
+POST  http://localhost:7000/user-api/comment/1742222552
+Content-Type: application/json
+
+{
+    "username":"kar",
+    "comment":"Good"
+}
+
+###
+GET http://localhost:7000/test
+
