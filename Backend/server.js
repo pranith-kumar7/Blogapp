@@ -2,8 +2,13 @@
 const exp=require('express')
 const app=exp()
 const path=require('path')
+const cors=require('cors')
 require('dotenv').config()
 //add body parser middleware
+app.use(cors({
+    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(url => url.trim()) : '*',
+    credentials: true
+}))
 app.use(exp.json())
 //place react build in http webserver
 app.use(exp.static(path.join(__dirname,'../frontend/build')))

@@ -1,13 +1,14 @@
 import { createSlice,createAsyncThunk} from "@reduxjs/toolkit";
 import axios from 'axios'
+import API_BASE_URL from '../../api';
 
 export const userLoginThunk=createAsyncThunk('userlogin',async(creduser,thunkapi)=>{
         let res;
         if(creduser.userType==='user'){
-           res=await axios.post('http://localhost:7000/user-api/login',creduser)
+           res=await axios.post(`${API_BASE_URL}/user-api/login`,creduser)
         }
         if(creduser.userType==='author'){
-            res=await axios.post('http://localhost:7000/author-api/login',creduser)
+            res=await axios.post(`${API_BASE_URL}/author-api/login`,creduser)
         }
         if(res.data.message==='login success'){
             sessionStorage.setItem('token',res.data.token)

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Outlet } from 'react-router-dom'
 import axios from 'axios'
+import API_BASE_URL from '../api'
 function ArticleOfAuthor() {
     
     const [articleList,setArtcilesList]=useState([])
@@ -14,11 +15,12 @@ function ArticleOfAuthor() {
     const token=sessionStorage.getItem('token')
 
     const axiosWithToken=axios.create({
+    baseURL: API_BASE_URL,
     headers:{Authorization:`Bearer ${token}`},
     })
 
     const getArticleOfCurrentAuthor=async()=>{
-     let res=await axiosWithToken.get(`http://localhost:7000/author-api/articles/${currentUser.username}`)
+     let res=await axiosWithToken.get(`/author-api/articles/${currentUser.username}`)
      if(res.data.message==='Articles'){
         setArtcilesList(res.data.payload)
      }

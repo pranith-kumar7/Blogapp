@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import API_BASE_URL from '../api'
 function Articles() {
     const [articleList,setArticlesList]=useState([])
     const [err,setErr]=useState('')
     let navigate=useNavigate()
     let token=sessionStorage.getItem('token')
     const axiosWithToken=axios.create({
+    baseURL: API_BASE_URL,
     headers:{Authorization:`Bearer ${token}`},
     })
     const getArticleOfCurrentAuthor=async()=>{
-        let res=await axiosWithToken.get(`http://localhost:7000/user-api/articles`)
+        let res=await axiosWithToken.get(`/user-api/articles`)
         if(res.data.message==='All Articles')
         {
             setArticlesList(res.data.payload)

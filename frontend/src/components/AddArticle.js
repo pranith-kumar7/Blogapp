@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 /* import {axiosWithToken} from '../axiosWithToken' */
 import axios from 'axios'
+import API_BASE_URL from '../api'
 function AddArticle() {
        
 
@@ -19,6 +20,7 @@ function AddArticle() {
 
         let token=sessionStorage.getItem('token')
         const axiosWithToken=axios.create({
+        baseURL: API_BASE_URL,
         headers:{Authorization:`Bearer ${token}`}
         })
 
@@ -31,7 +33,7 @@ function AddArticle() {
             newarticle.status=true
 
         //make http post req 
-        let res=await axiosWithToken.post('http://localhost:7000/author-api/new-article',newarticle)
+        let res=await axiosWithToken.post('/author-api/new-article',newarticle)
         if(res.data.message==='New article added'){
             //navigate for articlesby author component
             navigate(`/authorprofile/articleofauthor/${currentUser.username}`)

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/signup.css'
+import API_BASE_URL from '../api';
 function Signup() {
     let { register, handleSubmit} = useForm();
     let [err, setErr] = useState("");
@@ -11,12 +12,12 @@ function Signup() {
     // Handle form submission
     async function handleFormSubmit(objData,event) {
         event.preventDefault()
-        console.log("Form Data Before Sending:", objData);
+            console.log("Form Data Before Sending:", objData);
         let res;
             if (objData.userType === 'user') {
-                res = await axios.post('http://localhost:7000/user-api/user', objData);
+                res = await axios.post(`${API_BASE_URL}/user-api/user`, objData);
             } if (objData.userType === 'author') {
-                res = await axios.post('http://localhost:7000/author-api/user', objData);
+                res = await axios.post(`${API_BASE_URL}/author-api/user`, objData);
             }
             if (res.data.message === 'user created' || 'author created') {
                 console.log("✅ Navigating to /signin...");

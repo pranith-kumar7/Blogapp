@@ -24,7 +24,7 @@ authorapp.post('/new-article',verifyToken,expressasynchandler(async(req,res)=>{
     //save new article to article collections
     await articleCollections.insertOne(newarticle)
     //send res
-    res.send({Message:"New article added"})
+    res.send({message:"New article added"})
 }))
 
 //read articles by author's username 

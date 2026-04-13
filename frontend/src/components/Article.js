@@ -8,6 +8,7 @@ import { MdRestore } from 'react-icons/md';
 import {BiCommentAdd} from 'react-icons/bi'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import API_BASE_URL from '../api';
 
 function Article() {
   let {register,handleSubmit}=useForm()
@@ -25,12 +26,13 @@ function Article() {
   let token = sessionStorage.getItem("token");
 
   const axiosWithToken = axios.create({
+    baseURL: API_BASE_URL,
     headers: { Authorization: `Bearer ${token}` },
   });
   const postComment = async (commentObj) => {
     commentObj.username = currentUser.username;
     let res = await axiosWithToken.post(
-      `http://localhost:7000/user-api/comment/${state.articleId}`,commentObj);
+      `/user-api/comment/${state.articleId}`,commentObj);
     if (res.data.message === "Comment added") {
       setCommentStatus(res.data.message);
           // Instead of replacing, append the new comment
@@ -49,7 +51,7 @@ function Article() {
     delete modifiedArticle._id
     modifiedArticle.DateOfModification=new Date()
     //make http PUT
-    let res=await axiosWithToken.put('http://localhost:7000/author-api/article',modifiedArticle)
+    let res=await axiosWithToken.put('/author-api/article',modifiedArticle)
     if(res.data.message==='article modified'){
       setArticleEditStatus(false)
       setEditedArticle(res.data.payload)
@@ -60,7 +62,7 @@ function Article() {
   const deleteArticleById=async()=>{
     let copy={...editedArticle}
     delete copy._id
-    let res=await axiosWithToken.put(`http://localhost:7000/author-api/article/${copy.articleId}`,copy)
+    let res=await axiosWithToken.put(`/author-api/article/${copy.articleId}`,copy)
     if(res.data.message==='article deleted'){
       setArticleViewStatus(false)
     }
@@ -69,7 +71,7 @@ function Article() {
   const restoreArticleById=async()=>{
     let copy={...editedArticle}
     delete copy._id
-    let res=await axiosWithToken.put(`http://localhost:7000/author-api/article/${copy.articleId}`,copy)
+    let res=await axiosWithToken.put(`/author-api/article/${copy.articleId}`,copy)
     if(res.data.message==='article restored'){
       setArticleViewStatus(true)
     }
