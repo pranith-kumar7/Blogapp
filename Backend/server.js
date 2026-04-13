@@ -3,7 +3,11 @@ const exp=require('express')
 const app=exp()
 const path=require('path')
 const cors=require('cors')
+const fs=require('fs')
 require('dotenv').config()
+const frontendBuildPath=path.join(__dirname,'../frontend/build')
+const frontendIndexPath=path.join(frontendBuildPath,'index.html')
+const hasFrontendBuild=fs.existsSync(frontendIndexPath)
 //add body parser middleware
 app.use(cors({
     origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(url => url.trim()) : '*',
@@ -11,7 +15,9 @@ app.use(cors({
 }))
 app.use(exp.json())
 //place react build in http webserver
-app.use(exp.static(path.join(__dirname,'../frontend/build')))
+if(hasFrontendBuild){
+    app.use(exp.static(frontendBuildPath))
+}
 const mongoClient=require('mongodb').MongoClient
 //connect to mongodb server
 mongoClient.connect(process.env.DB_URL)
@@ -50,7 +56,10 @@ app.get('/test', (req, res) => {
 
 //deals with page refresh
 app.use((req,res,next)=>{
-    res.sendFile(path.join(__dirname,'../frontend/build/index.html'))
+    if(hasFrontendBuild){
+        return res.sendFile(frontendIndexPath)
+    }
+    return res.status(404).send({message:"Route not found"})
   })
 
 //error handling middleware
