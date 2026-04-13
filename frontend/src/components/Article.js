@@ -19,7 +19,7 @@ function Article() {
   const [articleEditStatus,setArticleEditStatus]=useState(false)
   const [editedArticle,setEditedArticle]=useState(state)
   const [articleViewStatus,setArticleViewStatus]=useState(state.status)
-  let [err,setErr]=useState("")
+  let [errorMessage,setErrorMessage]=useState("")
    
   let navigate=useNavigate()
 
@@ -40,7 +40,7 @@ function Article() {
       ...prev,
       comments: [...prev.comments, commentObj], // Append the new comment
     }))} else {
-      setErr(res.data.message);
+      setErrorMessage(res.data.message);
     }
   };
   const editArticle=()=>{
@@ -142,6 +142,7 @@ function Article() {
   
       {/* Comments Section */}
       <div className="comments my-4">
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
         {Array.isArray(state?.comments) && state.comments.length > 0 ? (
           state.comments.map((commentObj, ind) => (
             <div key={ind} className="bg-light p-3">

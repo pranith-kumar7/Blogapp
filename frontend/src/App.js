@@ -65,7 +65,7 @@ function App() {
             },  
             {
               path:'',
-              element:<Navigate to={'articleofauthor/${currentUser.username}'}/>
+              element:<Navigate to="new-article"/>
             }
           ]
         }

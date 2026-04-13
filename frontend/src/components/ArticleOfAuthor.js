@@ -14,28 +14,27 @@ function ArticleOfAuthor() {
     )
     const token=sessionStorage.getItem('token')
 
-    const axiosWithToken=axios.create({
-    baseURL: API_BASE_URL,
-    headers:{Authorization:`Bearer ${token}`},
-    })
-
-    const getArticleOfCurrentAuthor=async()=>{
-     let res=await axiosWithToken.get(`/author-api/articles/${currentUser.username}`)
-     if(res.data.message==='Articles'){
-        setArtcilesList(res.data.payload)
-     }
-     else{
-        setErr(res.data.message)
-     }
-    }
-
     const readArticleByArticleId=(articleObj)=>{
         navigate(`../article/${articleObj.articleId}`,{state:articleObj})
     }
  
     useEffect(()=>{
-        getArticleOfCurrentAuthor()
-    },[])
+        const getArticleOfCurrentAuthor=async()=>{
+            let res=await axios.get(`${API_BASE_URL}/author-api/articles/${currentUser.username}`,{
+                headers:{Authorization:`Bearer ${token}`},
+            })
+            if(res.data.message==='Articles'){
+               setArtcilesList(res.data.payload)
+            }
+            else{
+               setErr(res.data.message)
+            }
+        }
+
+        if(currentUser?.username){
+            getArticleOfCurrentAuthor()
+        }
+    },[currentUser?.username, token])
 
   return (
     <div>

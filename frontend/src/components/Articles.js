@@ -7,23 +7,21 @@ function Articles() {
     const [err,setErr]=useState('')
     let navigate=useNavigate()
     let token=sessionStorage.getItem('token')
-    const axiosWithToken=axios.create({
-    baseURL: API_BASE_URL,
-    headers:{Authorization:`Bearer ${token}`},
-    })
-    const getArticleOfCurrentAuthor=async()=>{
-        let res=await axiosWithToken.get(`/user-api/articles`)
-        if(res.data.message==='All Articles')
-        {
-            setArticlesList(res.data.payload)
-        }else{
-            setErr(res.data.message)
-        }
-    }
-
     useEffect(()=>{
+        const getArticleOfCurrentAuthor=async()=>{
+            let res=await axios.get(`${API_BASE_URL}/user-api/articles`,{
+                headers:{Authorization:`Bearer ${token}`},
+            })
+            if(res.data.message==='All Articles')
+            {
+                setArticlesList(res.data.payload)
+            }else{
+                setErr(res.data.message)
+            }
+        }
+
         getArticleOfCurrentAuthor()
-    },[])
+    },[token])
 
     const readArticleByArticleId=(articleObj)=>{
         navigate(`../article/${articleObj.articleId}`,{state:articleObj})
