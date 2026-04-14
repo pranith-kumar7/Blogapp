@@ -64,7 +64,8 @@ app.use((req,res,next)=>{
 
 //error handling middleware
 app.use((err,req,res,next)=>{
-    res.send({status:"error",message:err.message})   
+    console.error(err)
+    res.status(err.status || 500).send({status:"error",message:err.message || "Internal server error"})   
 })
 
 

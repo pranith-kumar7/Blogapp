@@ -34,8 +34,14 @@ userapp.post('/comment/:articleId',verifyToken,expressasynchandler(async(req,res
     const articleIdUrl=(+req.params.articleId)
     //get comment obj from req
     const comment=req.body
+    if(!comment?.comments?.trim()){
+        return res.status(400).send({message:"Comment cannot be empty"})
+    }
     //add comment obj as an element to comments array of articles
-    await articleCollections.updateOne({articleId:articleIdUrl},{$addToSet:{comments:comment}})
+    const result=await articleCollections.updateOne({articleId:articleIdUrl},{$addToSet:{comments:comment}})
+    if(result.matchedCount===0){
+        return res.status(404).send({message:"Article not found"})
+    }
     res.send({message:"Comment added"})
 }))
 

@@ -21,10 +21,13 @@ authorapp.post('/login',expressasynchandler(loginuserorauthor))
 authorapp.post('/new-article',verifyToken,expressasynchandler(async(req,res)=>{
     //get new article from client
     const newarticle=req.body
+    if(!newarticle?.title?.trim() || !newarticle?.content?.trim() || !newarticle?.category?.trim()){
+        return res.status(400).send({message:"Title, category, and content are required"})
+    }
     //save new article to article collections
     await articleCollections.insertOne(newarticle)
     //send res
-    res.send({message:"New article added"})
+    res.status(201).send({message:"New article added"})
 }))
 
 //read articles by author's username 
@@ -40,29 +43,33 @@ authorapp.get('/articles/:username',verifyToken,expressasynchandler(async(req,re
 authorapp.put('/article',verifyToken,expressasynchandler(async(req,res)=>{
     //get modified article
     const  modifiedarticle=req.body
+    if(!modifiedarticle?.articleId){
+        return res.status(400).send({message:"Article id is required"})
+    }
     let articleAfterModification=await articleCollections.findOneAndUpdate({articleId:(+modifiedarticle.articleId)},{$set:{...modifiedarticle}},{returnDocument:'after'})
+    if(!articleAfterModification){
+        return res.status(404).send({message:"Article not found"})
+    }
     res.send({message:"article modified",payload:articleAfterModification})
 }))
 
 //delete article(soft delete)
 authorapp.put('/article/:articleId',verifyToken,expressasynchandler(async(req,res)=>{
-    console.log("hello")
     let articleIdofUrl=Number(req.params.articleId)
     let art=req.body
     if(art.status===true){
     let result=await articleCollections.updateOne({articleId:articleIdofUrl},{$set:{status:false}})
-    console.log(result)
     if(result.modifiedCount===1){
     return res.send({message:"article deleted"})
     }
   }
   if(art.status===false){
     let result=await articleCollections.updateOne({articleId:articleIdofUrl},{$set:{status:true}})
-    console.log(result)
     if(result.modifiedCount===1){
       return res.send({message:"article restored"})
     }
   }
+  return res.status(404).send({message:"Article not found"})
 }))
 
 //export authorapp
