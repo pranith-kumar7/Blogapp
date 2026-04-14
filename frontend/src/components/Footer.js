@@ -1,15 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import x from '../Assests/footer.png'
+
 function Footer() {
   return (
-    <div className='bg-black pt-5 pb-3 fs-5 fw-bold text-white text-center'>
-        follow us on 
-        <Link className="d-block navbar-brand fw-bolder text-white" to="/">
-          <img className='h-25' src={x} alt="" />
+    <footer className='page-shell pb-4'>
+      <div className='glass-panel px-4 py-4 d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3 text-center text-lg-start'>
+        <div>
+          <div className='brand-pill mb-2'>Built For Writers</div>
+          <h3 className='mb-2'>Publish polished stories with a cleaner workflow.</h3>
+          <p className='section-copy mb-0'>A role-based blog experience for readers, authors, and future admin workflows.</p>
+        </div>
+        <Link className="d-inline-block navbar-brand fw-bolder text-white" to="/">
+          <img style={{maxWidth:'180px'}} src={x} alt="Blog App footer art" />
         </Link>
-        Terms and Conditions Apply
-    </div>
+      </div>
+    </footer>
   )
 }
 

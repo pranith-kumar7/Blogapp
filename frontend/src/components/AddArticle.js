@@ -2,87 +2,68 @@ import React,{useState} from 'react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-/* import {axiosWithToken} from '../axiosWithToken' */
 import axios from 'axios'
 import API_BASE_URL from '../api'
+
 function AddArticle() {
-       
+  let {register,handleSubmit}=useForm()
+  let {currentUser}=useSelector((state)=>state.userlogin)
+  let [err,setErr]=useState("")
+  let navigate=useNavigate()
 
-        let {register,handleSubmit}=useForm()
-        let {currentUser}=useSelector(
-            (state)=>state.userlogin
-        )
-        let [err,setErr]=useState("")
-        let navigate=useNavigate()
-        function postSuceess(obj){
-            navigate('/authorprofile')
-        }
+  let token=sessionStorage.getItem('token')
+  const axiosWithToken=axios.create({
+    baseURL: API_BASE_URL,
+    headers:{Authorization:`Bearer ${token}`}
+  })
 
-        let token=sessionStorage.getItem('token')
-        const axiosWithToken=axios.create({
-        baseURL: API_BASE_URL,
-        headers:{Authorization:`Bearer ${token}`}
-        })
+  const addnewArticle=async(newarticle)=>{
+    newarticle.articleId=Date.now()
+    newarticle.DateOfCreation=new Date()
+    newarticle.DateOfModification=new Date()
+    newarticle.username=currentUser.username
+    newarticle.comments=[]
+    newarticle.status=true
 
-        const addnewArticle=async(newarticle)=>{
-            newarticle.articleId=Date.now()
-            newarticle.DateOfCreation=new Date()
-            newarticle.DateOfModification=new Date()
-            newarticle.username=currentUser.username
-            newarticle.comments=[]
-            newarticle.status=true
-
-        //make http post req 
-        let res=await axiosWithToken.post('/author-api/new-article',newarticle)
-        if(res.data.message==='New article added'){
-            //navigate for articlesby author component
-            navigate(`/authorprofile/articleofauthor/${currentUser.username}`)
-        }
-        else{
-                setErr(res.data.message)
-        }
-
+    let res=await axiosWithToken.post('/author-api/new-article',newarticle)
+    if(res.data.message==='New article added'){
+      navigate(`/authorprofile/articleofauthor/${currentUser.username}`)
+    } else {
+      setErr(res.data.message)
     }
+  }
 
   return (
-    <div>
-        <div className='container w-75 bg-white rounded-4'>
-            <div className='row justify-content-center mt-5'>
-                <div className='col-lg-8 col-md-8 col-sm-10'>   
-                    <div className='card-shadow'>
-                        <div className='card-title text-center border-bottom'>
-                            <h2 className='p-3'>Write an Article</h2>
-                        </div>  
-                        <div className='card-body bg-light'>
-                            <form className='pb-3' onSubmit={handleSubmit(addnewArticle)}>
-                                <div className='mb-4'>
-                                    <label htmlFor="title" className='form-label'>Title</label>
-                                    <input type="text" id='title' className='form-control' {...register('title')} /> 
-                                </div>
-                                <div className='mb-4'>
-                                    <label htmlFor="category" className='form-label'>Category</label>
-                                    <select className='form-select' id="category" {...register('category')} >
-                                            <option value="" selected disabled>select a category</option>
-                                            <option value="programming">Programming</option>
-                                             <option value="science">Science</option>
-                                            <option value="stockmarket">Stock Market</option>
-                                            <option value="yoga">Yoga</option>
-                                    </select>   
-                                </div>
-                                <div className='mb-4'>
-                                    <label htmlFor="content" className='form-label'>Content</label>
-                                    <textarea className='form-control' id="content" rows="10" {...register('content')} ></textarea>
-                                </div>
-                                <div className='text-end pe-5'>
-                                <button type='submit' className='text-center btn btn-success' onClick={postSuceess}  >Post</button>
-                                </div>
-                            </form>
-                            {err && <p className="text-danger text-center mt-3">{err}</p>}
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div className='glass-panel p-4 p-lg-5'>
+      <div className='mb-4'>
+        <div className='brand-pill mb-2'>New Story</div>
+        <h2 className='mb-2'>Write and publish a new article</h2>
+        <p className='section-copy mb-0'>Draft clearly, assign a category, and publish straight to your author workspace.</p>
+      </div>
+      <form className='pb-3' onSubmit={handleSubmit(addnewArticle)}>
+        <div className='mb-4'>
+          <label htmlFor="title" className='field-label'>Title</label>
+          <input type="text" id='title' className='field-input' placeholder='Give your article a strong headline' {...register('title')} /> 
         </div>
+        <div className='mb-4'>
+          <label htmlFor="category" className='field-label'>Category</label>
+          <select className='field-select' id="category" defaultValue="" {...register('category')} >
+            <option value="" disabled>Choose a category</option>
+            <option value="programming">Programming</option>
+            <option value="science">Science</option>
+            <option value="stockmarket">Stock Market</option>
+            <option value="yoga">Yoga</option>
+          </select>   
+        </div>
+        <div className='mb-4'>
+          <label htmlFor="content" className='field-label'>Content</label>
+          <textarea className='field-textarea' id="content" rows="10" placeholder='Write your article here...' {...register('content')} />
+        </div>
+        <div className='d-flex justify-content-end'>
+          <button type='submit' className='primary-btn'>Publish article</button>
+        </div>
+      </form>
+      {err && <p className="error-state mt-3 mb-0">{err}</p>}
     </div>
   )
 }

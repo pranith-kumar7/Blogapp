@@ -1,53 +1,53 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import i from '../Assests/Icon.png'
 import { useSelector,useDispatch } from 'react-redux'
 import { resetState } from '../redux/slices/userloginslice'
+
 function Navigation() {
+  const {currentUser,loginStatus}=useSelector(state=>state.userlogin)
+  let dispatch=useDispatch()
 
-      const {currentUser,loginStatus}=useSelector(state=>state.userlogin)
-      let dispatch=useDispatch()
-
-      function logOut(obj){
-        //remove tooken from browser storage
-        sessionStorage.removeItem('token')
-        //reset state
-        let action=resetState()
-        dispatch(action) 
-      }
+  function logOut(){
+    sessionStorage.removeItem('token')
+    let action=resetState()
+    dispatch(action) 
+  }
 
   return (
-    <div className='bg-black d-flex align-items-center justify-content-between px-3 py-2'>
-        <Link className="navbar-brand fw-bolder text-white" to="/">
-          <img className='rounded-circle' style={{width:"62px",height:"62px"}} src={i} alt="" />
-         {/*  <input type="text" className='form-control mx-auto w-50' placeholder='search'  value={search}
-            onChange={(e) => getSearch(e.target.value)} /> */}
+    <header className='page-shell pt-3'>
+      <div className='glass-panel d-flex flex-column flex-lg-row align-items-lg-center justify-content-between px-3 px-lg-4 py-3 gap-3'>
+        <Link className="d-flex align-items-center gap-3 text-decoration-none" to="/">
+          <img className='rounded-circle border border-info-subtle' style={{width:"62px",height:"62px", objectFit:"cover"}} src={i} alt="Blog App logo" />
+          <div>
+            <div className='brand-pill mb-2'>Editorial Platform</div>
+            <div className='fs-3 fw-bold text-white'>Blog App</div>
+          </div>
         </Link>
-        <ul className="navbar-nav d-flex flex-row gap-4">
-            {loginStatus===false?(<>{" "}<li className="nav-item"> 
-            <Link className="nav-link fs-5 text-info fw-bold" to="/home">
-              Home
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link fs-5 text-info fw-bold" to="/signup">
-              SignUp
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link fs-5 text-info fw-bold" to="/signin">
-              SignIn
-            </Link>
-          </li></>):(<li className="nav-item">
-            <Link className="nav-link fs-5 text-danger fw-bold" onClick={logOut}>
-             <span className="fw-bolder text-info fs-4 me-3 fw-3" onClick={(e)=>{e.preventDefault();e.stopPropagation();}}>{currentUser.username}
-             <sup className='text-info'>({currentUser.userType})</sup>
-             </span>
-              Signout
-            </Link>
-          </li>)}  
-        </ul>
-    </div>
+        <nav className='d-flex flex-wrap align-items-center gap-2 gap-lg-3'>
+          {loginStatus===false ? (
+            <>
+              <NavLink className="ghost-btn" to="/home">Home</NavLink>
+              <NavLink className="ghost-btn" to="/signup">Create account</NavLink>
+              <NavLink className="primary-btn" to="/signin">Sign in</NavLink>
+            </>
+          ) : (
+            <>
+              <div className='px-3 py-2 rounded-pill' style={{background:'rgba(125, 211, 252, 0.08)', border:'1px solid rgba(125, 211, 252, 0.18)', fontFamily:'Arial, Helvetica, sans-serif'}}>
+                <span className='fw-bold text-white'>{currentUser.username}</span>
+                <span className='ms-2 text-info text-capitalize'>{currentUser.userType}</span>
+              </div>
+              <Link className="ghost-btn text-decoration-none" to={currentUser.userType === 'author' ? '/authorprofile' : '/userprofile/articles'}>
+                Workspace
+              </Link>
+              <Link className="secondary-btn" to="/" onClick={logOut}>
+                Sign out
+              </Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
   )
 }
 

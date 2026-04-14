@@ -1,68 +1,76 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/signup.css'
 import API_BASE_URL from '../api';
-function Signup() {
-    let { register, handleSubmit} = useForm();
-    let [err, setErr] = useState("");
-    let navigate = useNavigate();
 
-    // Handle form submission
-    async function handleFormSubmit(objData,event) {
-        event.preventDefault()
-            console.log("Form Data Before Sending:", objData);
-        let res;
-            if (objData.userType === 'user') {
-                res = await axios.post(`${API_BASE_URL}/user-api/user`, objData);
-            } if (objData.userType === 'author') {
-                res = await axios.post(`${API_BASE_URL}/author-api/user`, objData);
-            }
-            if (res.data.message === 'user created' || 'author created') {
-                console.log("✅ Navigating to /signin...");
-                navigate("/signin");
-            } else {
-                setErr(res.data.message);   
-                }
+function Signup() {
+  let { register, handleSubmit} = useForm();
+  let [err, setErr] = useState("");
+  let navigate = useNavigate();
+
+  async function handleFormSubmit(objData,event) {
+    event.preventDefault()
+    let res;
+    if (objData.userType === 'user') {
+      res = await axios.post(`${API_BASE_URL}/user-api/user`, objData);
     }
-    return (
-        <div className='signup-container'>
-            <div className='card container rounded-4 bg-dark mt-5 h-75 w-50 text-center'>
-                <div className='card-header bg-dark text-info fs-5 fw-bolder'>
-                    SignUp  
-                </div>
-                <div className='card-body'>
-                    {/* User register error */}
-                    {err.length!==0 && <p className='text-danger text-center'>{err}</p>}
-                    
-                    <form className='mx-auto w-50' onSubmit={handleSubmit(handleFormSubmit)}>
-                        <div className='d-flex align-items-center gap-3 mb-3'>
-                            <label className='form-label mb-0 text-white'>Register As :</label>
-                            <div className="form-check">   
-                                <input type="radio" id="user" className="form-check-input" value="user" {...register('userType')} />
-                                <label htmlFor="user" className="form-check-label text-white ms-1">User</label>
-                            </div>
-                            <div className="form-check">
-                                <input type="radio" id="author" className="form-check-input" value="author" {...register('userType')}/>
-                                <label htmlFor="author" className="form-check-label text-white ms-1">Author</label>
-                            </div>
-                        </div>
-                        <label className='form-label d-flex justify-content-start text-white'>Username :</label>
-                        <input type='text' className='form-control mt-3 mb-3' placeholder='Username' 
-                            {...register('username')} />
-                        <label className='form-label d-flex justify-content-start text-white'>Password :</label>
-                        <input type='password' className='form-control mt-3 mb-3' 
-                            {...register('password')} />
-                        <label className='form-label d-flex justify-content-start text-white'>Email :</label>
-                        <input type='email' className='form-control mt-3 mb-3' 
-                            {...register('email')} />
-                        <button className='mt-5 btn w-50 btn-info d-block mx-auto' type='submit'>Register</button>
-                    </form> 
-                </div>
-            </div>
+    if (objData.userType === 'author') {
+      res = await axios.post(`${API_BASE_URL}/author-api/user`, objData);
+    }
+    if (res.data.message === 'user created' || res.data.message === 'author created') {
+      navigate("/signin");
+    } else {
+      setErr(res.data.message);   
+    }
+  }
+
+  return (
+    <section className='auth-shell page-shell'>
+      <div className='row g-4 align-items-stretch'>
+        <div className='col-lg-5'>
+          <div className='glass-panel h-100 p-4 p-lg-5'>
+            <div className='brand-pill mb-3'>Start publishing</div>
+            <h1 className='section-title'>Create a reader or author account in one step.</h1>
+            <p className='section-copy'>Readers can explore and comment. Authors get tools to publish, update, and manage their articles.</p>
+          </div>
         </div>
-    );
+        <div className='col-lg-7'>
+          <div className='glass-panel p-4 p-lg-5'>
+            <h2 className='mb-4'>Create account</h2>
+            {err.length!==0 && <p className='error-state mb-4'>{err}</p>}
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+              <div className='d-flex flex-wrap gap-3 mb-4' style={{fontFamily:'Arial, Helvetica, sans-serif'}}>
+                <label className='brand-pill'>
+                  <input type="radio" id="user" value="user" {...register('userType')} />
+                  User
+                </label>
+                <label className='brand-pill'>
+                  <input type="radio" id="author" value="author" {...register('userType')}/>
+                  Author
+                </label>
+              </div>
+              <div className='mb-3'>
+                <label className='field-label'>Username</label>
+                <input type='text' className='field-input' placeholder='Choose a username' {...register('username')} />
+              </div>
+              <div className='mb-3'>
+                <label className='field-label'>Password</label>
+                <input type='password' className='field-input' placeholder='Create a secure password' {...register('password')} />
+              </div>
+              <div className='mb-4'>
+                <label className='field-label'>Email</label>
+                <input type='email' className='field-input' placeholder='name@example.com' {...register('email')} />
+              </div>
+              <button className='primary-btn' type='submit'>Register</button>
+              <p className='section-copy mt-4 mb-0'>Already have an account? <Link className='text-info text-decoration-none fw-bold' to="/signin">Sign in</Link></p>
+            </form> 
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default Signup;
