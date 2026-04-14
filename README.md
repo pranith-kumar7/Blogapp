@@ -4,18 +4,18 @@ A full-stack blogging platform built with React, Express, and MongoDB. Users can
 
 ## Quick Look
 
-- Live Demo: Not deployed yet
+- Live Demo: https://blogapp-zeta-eight.vercel.app
 - Frontend: React, Redux Toolkit, Bootstrap
 - Backend: Express, MongoDB, JWT auth
-- Run Mode: local development or Express-served production build
+- Deployment: Vercel frontend, Render backend, MongoDB Atlas database
 
 ## Preview
 
-The next upgrade for this repo is adding a deployed URL and a homepage screenshot. The codebase is already structured for that path with environment-based API configuration and an Express production build flow.
+The application is live and running in production. A screenshot can be added here next, but the project is already deployed with separate frontend and backend hosting plus a hosted MongoDB database.
 
 ## Why This Project
 
-This project was built to model a role-based content platform with separate user and author workflows, JWT-based authentication, and a backend that can serve both API traffic and a production React build. It demonstrates how to structure a small full-stack application so it can run locally during development and be prepared for deployment with environment-based configuration.
+This project was built to model a role-based content platform with separate user and author workflows, JWT-based authentication, and a deployable full-stack architecture. It demonstrates how to structure a React and Express application so it works locally during development and also runs in production with environment-based configuration, hosted services, and a shared cloud database.
 
 ## Engineering Highlights
 
@@ -137,12 +137,12 @@ The backend serves the built frontend from `frontend/build`.
 ## Recruiter Notes
 
 - This repo demonstrates end-to-end ownership across frontend, backend, auth, database integration, and production build serving.
-- The current version is structured to be deployable with environment-specific configuration rather than being tied to a local-only setup.
-- It is a strong foundation for a hosted demo using MongoDB Atlas plus a frontend/backend deployment platform.
+- The current version is deployed with a Vercel frontend, Render backend, and MongoDB Atlas database.
+- The codebase has been updated to support environment-specific API configuration instead of relying on a local-only setup.
 
 ## Next Improvements
 
-- Add request validation and clearer API error responses
+- Add richer homepage content and article discovery UX
 - Add automated tests for auth and article flows
 - Add CI checks for build/test
-- Deploy frontend and backend with live demo links
+- Add screenshots and a short product walkthrough to the README
