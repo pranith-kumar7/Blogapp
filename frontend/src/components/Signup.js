@@ -12,17 +12,23 @@ function Signup() {
 
   async function handleFormSubmit(objData,event) {
     event.preventDefault()
-    let res;
-    if (objData.userType === 'user') {
-      res = await axios.post(`${API_BASE_URL}/user-api/user`, objData);
-    }
-    if (objData.userType === 'author') {
-      res = await axios.post(`${API_BASE_URL}/author-api/user`, objData);
-    }
-    if (res.data.message === 'user created' || res.data.message === 'author created') {
-      navigate("/signin");
-    } else {
-      setErr(res.data.message);   
+    try{
+      let res;
+      if (objData.userType === 'user') {
+        res = await axios.post(`${API_BASE_URL}/user-api/user`, objData);
+      } else if (objData.userType === 'author') {
+        res = await axios.post(`${API_BASE_URL}/author-api/user`, objData);
+      } else {
+        setErr('Select whether you are registering as a user or author')
+        return
+      }
+      if (res.data.message === 'user created' || res.data.message === 'author created') {
+        navigate("/signin");
+      } else {
+        setErr(res.data.message);   
+      }
+    }catch(err){
+      setErr(err.response?.data?.message || 'Unable to create account right now')
     }
   }
 

@@ -3,12 +3,15 @@ import axios from 'axios'
 import API_BASE_URL from '../../api';
 
 export const userLoginThunk=createAsyncThunk('userlogin',async(creduser,thunkapi)=>{
+    try{
         let res;
         if(creduser.userType==='user'){
            res=await axios.post(`${API_BASE_URL}/user-api/login`,creduser)
         }
-        if(creduser.userType==='author'){
+        else if(creduser.userType==='author'){
             res=await axios.post(`${API_BASE_URL}/author-api/login`,creduser)
+        } else {
+            return thunkapi.rejectWithValue('Select whether you are signing in as a user or author')
         }
         if(res.data.message==='login success'){
             sessionStorage.setItem('token',res.data.token)
@@ -17,6 +20,9 @@ export const userLoginThunk=createAsyncThunk('userlogin',async(creduser,thunkapi
         else{
             return thunkapi.rejectWithValue(res.data.message)
         }
+    }catch(err){
+        return thunkapi.rejectWithValue(err.response?.data?.message || 'Unable to sign in right now')
+    }
 })
 
 
@@ -37,7 +43,8 @@ export const userloginslice=createSlice({
     extraReducers:builder=>builder
     .addCase(userLoginThunk.pending,(state,action)=>{
         state.isPending=true
-
+        state.errorStatus=false
+        state.errorMessage=""
     })
     .addCase(userLoginThunk.fulfilled,(state,action)=>{
         state.isPending=false
@@ -50,7 +57,7 @@ export const userloginslice=createSlice({
         state.isPending=false
         state.currentUser={}
         state.errorStatus=true
-        state.errorMessage=action.payload
+        state.errorMessage=action.payload || "Unable to sign in"
         state.loginStatus=false
     })
 })
